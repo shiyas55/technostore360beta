@@ -804,6 +804,80 @@ function getHomeHTML(params) {
       </div>
     </section>
 
+    <!-- Comparison Table Section -->
+    <section style="margin-top: 5rem; margin-bottom: 3rem;">
+      <div style="margin-bottom: 2rem;">
+        <span class="section-kicker" style="color: var(--accent); font-weight: 800; letter-spacing: 0.15em; font-size: 0.72rem;">WHY A RESELLER, WHY US</span>
+        <h2 style="font-size: 1.85rem; font-weight: 800; color: var(--navy); margin-top: 0.35rem; margin-bottom: 0.5rem;">Buying direct vs. buying through TechnoStore360.</h2>
+        <p style="font-size: 0.9rem; color: var(--muted); line-height: 1.5; max-width: 600px;">
+          A real comparison. The procurement reasons companies choose us over the brand's direct portal — and over generic IT shops.
+        </p>
+      </div>
+
+      <div class="card" style="padding: 0; overflow-x: auto; border-radius: 16px; border: 1px solid var(--slate-200); box-shadow: 0 10px 30px rgba(37, 52, 75, 0.03);">
+        <table style="width: 100%; border-collapse: collapse; text-align: left; min-width: 700px; font-size: 0.82rem;">
+          <thead>
+            <tr style="border-bottom: 1px solid var(--slate-200); background-color: #fafbfc;">
+              <th style="padding: 1.15rem 1.25rem; font-weight: 800; color: var(--slate-500); text-transform: uppercase; font-size: 0.7rem; letter-spacing: 0.05em; width: 35%;">Capability</th>
+              <th style="padding: 1.15rem 1.25rem; font-weight: 800; color: var(--accent); text-transform: uppercase; font-size: 0.7rem; letter-spacing: 0.05em; background-color: rgba(226, 27, 90, 0.03); width: 22%;">TechnoStore360</th>
+              <th style="padding: 1.15rem 1.25rem; font-weight: 800; color: var(--slate-500); text-transform: uppercase; font-size: 0.7rem; letter-spacing: 0.05em; width: 21%;">Direct From Brand</th>
+              <th style="padding: 1.15rem 1.25rem; font-weight: 800; color: var(--slate-500); text-transform: uppercase; font-size: 0.7rem; letter-spacing: 0.05em; width: 22%;">Generic IT Reseller</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom: 1px solid var(--slate-100);">
+              <td style="padding: 1.1rem 1.25rem; font-weight: 600; color: var(--slate-800);">Local invoicing in OMR / AED / INR</td>
+              <td style="padding: 1.1rem 1.25rem; font-weight: 700; color: var(--accent); background-color: rgba(226, 27, 90, 0.03);">✓</td>
+              <td style="padding: 1.1rem 1.25rem; color: var(--slate-600);">partial</td>
+              <td style="padding: 1.1rem 1.25rem; color: var(--slate-400);">—</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--slate-100);">
+              <td style="padding: 1.1rem 1.25rem; font-weight: 600; color: var(--slate-800);">Net-30 / Net-60 terms</td>
+              <td style="padding: 1.1rem 1.25rem; font-weight: 700; color: var(--accent); background-color: rgba(226, 27, 90, 0.03);">✓</td>
+              <td style="padding: 1.1rem 1.25rem; color: var(--slate-400);">—</td>
+              <td style="padding: 1.1rem 1.25rem; color: var(--slate-600);">rare</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--slate-100);">
+              <td style="padding: 1.1rem 1.25rem; font-weight: 600; color: var(--slate-800);">Single quote across software + hardware</td>
+              <td style="padding: 1.1rem 1.25rem; font-weight: 700; color: var(--accent); background-color: rgba(226, 27, 90, 0.03);">✓</td>
+              <td style="padding: 1.1rem 1.25rem; color: var(--slate-400);">—</td>
+              <td style="padding: 1.1rem 1.25rem; color: var(--slate-600);">partial</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--slate-100);">
+              <td style="padding: 1.1rem 1.25rem; font-weight: 600; color: var(--slate-800);">On-site deployment & training</td>
+              <td style="padding: 1.1rem 1.25rem; font-weight: 700; color: var(--accent); background-color: rgba(226, 27, 90, 0.03);">✓</td>
+              <td style="padding: 1.1rem 1.25rem; color: var(--slate-400);">—</td>
+              <td style="padding: 1.1rem 1.25rem; color: var(--slate-600);">partial</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--slate-100);">
+              <td style="padding: 1.1rem 1.25rem; font-weight: 600; color: var(--slate-800);">Arabic + English support</td>
+              <td style="padding: 1.1rem 1.25rem; font-weight: 700; color: var(--accent); background-color: rgba(226, 27, 90, 0.03);">✓</td>
+              <td style="padding: 1.1rem 1.25rem; color: var(--slate-600);">partial</td>
+              <td style="padding: 1.1rem 1.25rem; color: var(--slate-400);">—</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--slate-100);">
+              <td style="padding: 1.1rem 1.25rem; font-weight: 600; color: var(--slate-800);">Volume tier discounts (5/25/100+ seats)</td>
+              <td style="padding: 1.1rem 1.25rem; font-weight: 700; color: var(--accent); background-color: rgba(226, 27, 90, 0.03);">✓</td>
+              <td style="padding: 1.1rem 1.25rem; color: var(--slate-600);">✓</td>
+              <td style="padding: 1.1rem 1.25rem; color: var(--slate-600);">partial</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--slate-100);">
+              <td style="padding: 1.1rem 1.25rem; font-weight: 600; color: var(--slate-800);">Renewal protection at original pricing</td>
+              <td style="padding: 1.1rem 1.25rem; font-weight: 700; color: var(--accent); background-color: rgba(226, 27, 90, 0.03);">✓</td>
+              <td style="padding: 1.1rem 1.25rem; color: var(--slate-400);">—</td>
+              <td style="padding: 1.1rem 1.25rem; color: var(--slate-400);">—</td>
+            </tr>
+            <tr style="border-bottom: none;">
+              <td style="padding: 1.1rem 1.25rem; font-weight: 600; color: var(--slate-800);">Dedicated specialist per account</td>
+              <td style="padding: 1.1rem 1.25rem; font-weight: 700; color: var(--accent); background-color: rgba(226, 27, 90, 0.03);">✓</td>
+              <td style="padding: 1.1rem 1.25rem; color: var(--slate-400);">—</td>
+              <td style="padding: 1.1rem 1.25rem; color: var(--slate-600);">partial</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
     <!-- Reseller Band (Megaphone design) -->
     <section class="reseller-band" style="background: linear-gradient(135deg, rgba(255, 20, 100, 0.04) 0%, rgba(255, 20, 100, 0.09) 100%), var(--paper);">
       <div class="reseller-band__metric">25%</div>
