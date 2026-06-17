@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Create B2B Buyer Account - TechnoStore360{% endblock %}
+
+{% block content %}
+<div style="padding-top: 1rem;">
+  <div class="auth-container card" style="border-radius: var(--radius-lg); min-height: auto; display: flex; flex-direction: row; max-width: 900px; margin: 0 auto;">
+    
+    <div class="auth-form-side" style="padding: 2.5rem 2rem; flex: 1.5;">
+      <div style="text-align: center; margin-bottom: 1.5rem;">
+        <h2 style="font-size: 1.5rem; margin-bottom: 0.25rem; font-weight: 800; color: var(--slate-900);">Create Buyer Account</h2>
+        <p style="color: var(--slate-500); font-size: 0.8rem;">Register your business details to start onboarding software/hardware procurement stacks.</p>
+      </div>
+
+      <form method="POST" action="{% url 'register' %}">
+        {% csrf_token %}
+        <div class="form-grid-2" style="margin-bottom: 1rem;">
+          <div class="form-group">
+            <label class="form-label" style="font-size: 0.75rem; font-weight: 600; color: var(--slate-700); margin-bottom: 0.25rem; display: block;">Corporate Username *</label>
+            <input type="text" name="username" required class="form-input" placeholder="e.g. shiyas_buyer" style="width: 100%; padding: 0.6rem; border: 1px solid var(--slate-200); border-radius: var(--radius-md); font-size: 0.8rem;">
+          </div>
+          <div class="form-group">
+            <label class="form-label" style="font-size: 0.75rem; font-weight: 600; color: var(--slate-700); margin-bottom: 0.25rem; display: block;">Corporate Email *</label>
+            <input type="email" name="email" required class="form-input" placeholder="shiyas@company.com" style="width: 100%; padding: 0.6rem; border: 1px solid var(--slate-200); border-radius: var(--radius-md); font-size: 0.8rem;">
+          </div>
+        </div>
+
+        <div class="form-grid-2" style="margin-bottom: 1rem;">
+          <div class="form-group">
+            <label class="form-label" style="font-size: 0.75rem; font-weight: 600; color: var(--slate-700); margin-bottom: 0.25rem; display: block;">First Name</label>
+            <input type="text" name="first_name" class="form-input" placeholder="Shiyas" style="width: 100%; padding: 0.6rem; border: 1px solid var(--slate-200); border-radius: var(--radius-md); font-size: 0.8rem;">
+          </div>
+          <div class="form-group">
+            <label class="form-label" style="font-size: 0.75rem; font-weight: 600; color: var(--slate-700); margin-bottom: 0.25rem; display: block;">Last Name</label>
+            <input type="text" name="last_name" class="form-input" placeholder="Ahmad" style="width: 100%; padding: 0.6rem; border: 1px solid var(--slate-200); border-radius: var(--radius-md); font-size: 0.8rem;">
+          </div>
+        </div>
+
+        <div class="form-grid-2" style="margin-bottom: 1rem;">
+          <div class="form-group">
+            <label class="form-label" style="font-size: 0.75rem; font-weight: 600; color: var(--slate-700); margin-bottom: 0.25rem; display: block;">Company Name *</label>
+            <input type="text" name="company_name" required class="form-input" placeholder="Apex Digital Corp" style="width: 100%; padding: 0.6rem; border: 1px solid var(--slate-200); border-radius: var(--radius-md); font-size: 0.8rem;">
+          </div>
+          <div class="form-group">
+            <label class="form-label" style="font-size: 0.75rem; font-weight: 600; color: var(--slate-700); margin-bottom: 0.25rem; display: block;">Company Phone *</label>
+            <input type="text" name="phone_number" required class="form-input" placeholder="+91 96337 06212" style="width: 100%; padding: 0.6rem; border: 1px solid var(--slate-200); border-radius: var(--radius-md); font-size: 0.8rem;">
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 1.5rem;">
+          <label class="form-label" style="font-size: 0.75rem; font-weight: 600; color: var(--slate-700); margin-bottom: 0.25rem; display: block;">Password *</label>
+          <input type="password" name="password" required class="form-input" placeholder="••••••••" style="width: 100%; padding: 0.6rem; border: 1px solid var(--slate-200); border-radius: var(--radius-md); font-size: 0.8rem;">
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem;">
+          <button type="submit" class="btn btn-primary btn-sm" style="width: 100%; padding:0.65rem; font-size: 0.85rem; font-weight: 700;">Register Account</button>
+          <a href="{% url 'login' %}" class="btn btn-outline btn-sm" style="width: 100%; padding:0.65rem; font-size: 0.85rem; text-align: center; text-decoration: none;">Already have an account? Sign In</a>
+        </div>
+      </form>
+    </div>
+
+    <div class="auth-banner-side" style="padding: 2.5rem; border-radius: var(--radius-lg); margin: 1rem; flex: 1; display: flex; align-items: flex-end; background: linear-gradient(135deg, var(--accent) 0%, #a0003b 100%); color: white;">
+      <div>
+        <span class="badge" style="background-color: rgba(255,255,255,0.15); color: white; border: 1px solid rgba(255,255,255,0.2); font-size: 0.65rem;">B2B ENROLLMENT</span>
+        <h3 style="color: white; font-size: 1.35rem; margin-top: 0.75rem; line-height: 1.2; font-weight: 800;">Consolidated Invoicing</h3>
+        <p style="color: rgba(255,255,255,0.8); font-size: 0.8rem; margin-top: 0.35rem; line-height: 1.4;">Access unified tax invoicing, pre-configured cloud networks, and reseller program capabilities instantly upon approval.</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

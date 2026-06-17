@@ -1,0 +1,49 @@
+{% load static %}
+<div class="product-card-t360 brand-{{ product.brand.slug }}" onclick="window.location.href='{% url 'product_detail' product.slug %}';" style="opacity: 1; transform: translateY(0); cursor: pointer;">
+  {% if product.discount_percent > 0 %}
+    <span class="product-card-deal-tag">Save {{ product.discount_percent }}%</span>
+  {% elif product.is_trending %}
+    <span class="product-card-deal-tag">Trending</span>
+  {% endif %}
+  
+  <button type="button" class="compare-circle-btn {% if product.sku in compared_ids %}active{% endif %}" onclick="event.stopPropagation(); toggleCompareState('{{ product.sku }}', this);" title="Add to Compare Matrix">
+    <i data-lucide="columns" style="width: 0.8rem; height: 0.8rem;"></i>
+  </button>
+  
+  <div class="product-card-t360__logo-container">
+    {% if product.image_file %}
+      <img src="{{ product.image_file.url }}" alt="{{ product.name }}" loading="lazy">
+    {% elif product.image %}
+      {% if 'http' in product.image %}
+        <img src="{{ product.image }}" alt="{{ product.name }}" loading="lazy">
+      {% else %}
+        <img src="{% static product.image %}" alt="{{ product.name }}" loading="lazy">
+      {% endif %}
+    {% else %}
+      <img src="{% static 'assets/zoho.png' %}" alt="{{ product.name }}" loading="lazy">
+    {% endif %}
+  </div>
+  
+  <h3 class="product-card-t360__title">{{ product.name }}</h3>
+  <div class="product-card-t360__vendor">By {{ product.brand.name }}</div>
+  <hr class="product-card-t360__divider">
+  
+  <div class="product-card-t360__footer">
+    <div class="product-card-t360__price-wrapper">
+      <span class="product-card-t360__price-label">Starting at</span>
+      <span class="product-card-t360__price-value">
+        {% if product.price > 0 %}
+          INR {{ product.current_price_in_inr|floatformat:"2" }}
+          {% if product.sale_price %}
+            <span class="product-card-t360__price-original">INR {{ product.price_in_inr|floatformat:"0" }}</span>
+          {% endif %}
+        {% else %}
+          Get Quote
+        {% endif %}
+      </span>
+    </div>
+    <button class="product-card-t360__btn" aria-label="View Product">
+      <i data-lucide="arrow-right"></i>
+    </button>
+  </div>
+</div>

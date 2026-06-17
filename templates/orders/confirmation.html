@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title %}Order Confirmed - TechnoStore360{% endblock %}
+
+{% block content %}
+<div style="padding-top: 2rem; padding-bottom: 2rem; max-width: 650px; margin: 0 auto;">
+  <div class="card" style="text-align: center; padding: 3rem 2rem; border-radius: var(--radius-lg);">
+    
+    <div style="background-color: rgba(16, 185, 129, 0.1); color: var(--primary-green); width: 4.5rem; height: 4.5rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem auto;">
+      <i data-lucide="check-circle" style="width: 2.5rem; height: 2.5rem;"></i>
+    </div>
+    
+    <h1 style="font-size: 1.75rem; font-weight: 800; margin-bottom: 0.5rem; color: var(--slate-900);">Order Placed Successfully!</h1>
+    <p style="color: var(--slate-600); font-size: 0.95rem; margin-bottom: 1.5rem;">
+      Thank you for purchasing with TechnoStore360. Your B2B order has been generated and queued for manager verification.
+    </p>
+
+    <!-- Order Details Box -->
+    <div style="background-color: var(--slate-50); border: 1px solid var(--slate-200); border-radius: var(--radius-md); padding: 1.25rem; margin-bottom: 2rem; text-align: left;">
+      <div style="display: flex; justify-content: space-between; font-size: 0.8rem; border-bottom: 1px solid var(--slate-200); padding-bottom: 0.5rem; margin-bottom: 0.75rem;">
+        <span style="color: var(--slate-500); font-weight: 600;">Order ID:</span>
+        <strong style="color: var(--slate-900);">{{ order.order_number }}</strong>
+      </div>
+      <div style="display: flex; justify-content: space-between; font-size: 0.8rem; border-bottom: 1px solid var(--slate-200); padding-bottom: 0.5rem; margin-bottom: 0.75rem;">
+        <span style="color: var(--slate-500); font-weight: 600;">Payment Pathway:</span>
+        <span style="color: var(--slate-800); font-weight: 600;">{{ order.get_payment_method_display }}</span>
+      </div>
+      <div style="display: flex; justify-content: space-between; font-size: 0.8rem; border-bottom: 1px solid var(--slate-200); padding-bottom: 0.5rem; margin-bottom: 0.75rem;">
+        <span style="color: var(--slate-500); font-weight: 600;">Payment Status:</span>
+        <span style="color: var(--slate-800); font-weight: 600;">{{ order.get_payment_status_display }}</span>
+      </div>
+      <div style="display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 800;">
+        <span style="color: var(--slate-900);">Grand Total:</span>
+        <span style="color: var(--slate-900);">INR {{ order.total|floatformat:"2" }}</span>
+      </div>
+    </div>
+    
+    <div style="display: flex; justify-content: center; gap: 1rem; border-top: 1px solid var(--slate-100); padding-top: 1.5rem;">
+      <a href="{% url 'order_detail' order.order_number %}" class="btn btn-primary btn-sm" style="text-decoration: none;">Track Order Status</a>
+      <a href="{% url 'order_invoice' order.order_number %}" class="btn btn-outline btn-sm" style="text-decoration: none;" target="_blank"><i data-lucide="printer" style="width: 0.85rem; display: inline-block; vertical-align: text-top; margin-right: 2px;"></i> View B2B Invoice</a>
+      <a href="{% url 'customer_dashboard' %}" class="btn btn-outline btn-sm" style="text-decoration: none;">Procurement Dashboard</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

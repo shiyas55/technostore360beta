@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}Request Submitted Successfully - TechnoStore360{% endblock %}
+
+{% block content %}
+<div style="padding-top: 2rem; padding-bottom: 2rem; max-width: 600px; margin: 0 auto;">
+  <div class="card" style="text-align: center; padding: 3rem 2rem; border-radius: var(--radius-lg);">
+    <div style="background-color: rgba(16, 185, 129, 0.1); color: var(--primary-green); width: 4rem; height: 4rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem auto;">
+      <i data-lucide="check-circle" style="width: 2.5rem; height: 2.5rem;"></i>
+    </div>
+    
+    <h1 style="font-size: 1.75rem; font-weight: 800; margin-bottom: 0.5rem; color: var(--slate-900);">Thank you, {{ contact_name }}!</h1>
+    <p style="color: var(--slate-600); font-size: 0.95rem; margin-bottom: 1.5rem; line-height: 1.5;">
+      Your request for {% if company %}<strong>{{ company }}</strong>{% endif %} has been received. Our expert B2B deployment team will compile configuration pathways and contact you shortly.
+    </p>
+    
+    <div style="border-top: 1px solid var(--slate-100); padding-top: 1.5rem; display: flex; justify-content: center; gap: 1rem;">
+      <a href="{% url 'home' %}" class="btn btn-primary btn-sm">Explore Marketplace</a>
+      <a href="{% url 'product_list' %}" class="btn btn-outline btn-sm">View Catalog</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

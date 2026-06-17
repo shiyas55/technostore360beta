@@ -1,0 +1,196 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title %}Manage Order {{ order.order_number }} - TechnoStore360 Admin{% endblock %}
+
+{% block admin_content %}
+<div class="space-y-6">
+  
+  <div class="flex items-center justify-between flex-wrap gap-4">
+    <div>
+      <span class="text-xs text-slate-500 font-bold uppercase tracking-wider"><a href="{% url 'admin_orders' %}" class="hover:text-blue-600">Orders</a> &gt; Edit Order</span>
+      <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight font-display mt-1">Order {{ order.order_number }}</h1>
+      <p class="text-xs text-slate-400 font-semibold mt-1">Placed on: {{ order.created_at|date:"Y-m-d H:i" }}</p>
+    </div>
+    <div>
+      <a href="{% url 'order_invoice' order.order_number %}" target="_blank" class="inline-flex items-center px-4 py-2 text-sm font-bold rounded-lg border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 transition shadow-sm">
+        <span class="material-symbols-outlined mr-2 text-sm">print</span>
+        View Tax Invoice
+      </a>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    
+    <!-- Left column: update forms and items -->
+    <div class="lg:col-span-2 space-y-6">
+      
+      <!-- Management Controls -->
+      <div class="bg-white shadow rounded-lg border border-slate-200 p-6 space-y-6">
+        <h3 class="text-lg font-bold text-slate-900 border-b border-slate-100 pb-3">Operational Status Panel</h3>
+        
+        <!-- Status and Tracking update Form -->
+        <form method="POST" action="{% url 'admin_order_status_update' order.order_number %}" class="space-y-4">
+          {% csrf_token %}
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="form-group">
+              <label for="status" class="block text-xs font-bold text-slate-500 uppercase tracking-wider">Fulfillment Status</label>
+              <select name="status" id="status" class="mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                <option value="pending" {% if order.order_status == 'pending' %}selected{% endif %}>Pending</option>
+                <option value="confirmed" {% if order.order_status == 'confirmed' %}selected{% endif %}>Confirmed</option>
+                <option value="processing" {% if order.order_status == 'processing' %}selected{% endif %}>Processing</option>
+                <option value="shipped" {% if order.order_status == 'shipped' %}selected{% endif %}>Shipped</option>
+                <option value="out_for_delivery" {% if order.order_status == 'out_for_delivery' %}selected{% endif %}>Out for Delivery</option>
+                <option value="delivered" {% if order.order_status == 'delivered' %}selected{% endif %}>Delivered</option>
+                <option value="cancelled" {% if order.order_status == 'cancelled' %}selected{% endif %}>Cancelled</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label for="tracking_number" class="block text-xs font-bold text-slate-500 uppercase tracking-wider">Courier Tracking Number (DHL / FedEx)</label>
+              <input type="text" name="tracking_number" id="tracking_number" value="{{ order.tracking_number|default:'' }}" class="mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" placeholder="e.g. DHL9876543210">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="admin_notes" class="block text-xs font-bold text-slate-500 uppercase tracking-wider">Administrator / Vendor Notes</label>
+            <textarea name="admin_notes" id="admin_notes" rows="2" class="mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" placeholder="Notes seen by customer and sales representatives...">{{ order.admin_notes|default:'' }}</textarea>
+          </div>
+
+          <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-bold rounded-md text-white bg-blue-600 hover:bg-blue-700 transition">
+            Save Status & Tracking
+          </button>
+        </form>
+        
+        <hr class="border-slate-100">
+
+        <!-- Payment Status update Form -->
+        <form method="POST" action="{% url 'admin_order_payment_update' order.order_number %}" class="flex items-end gap-4">
+          {% csrf_token %}
+          <div class="form-group flex-1">
+            <label for="payment_status" class="block text-xs font-bold text-slate-500 uppercase tracking-wider">Payment Status</label>
+            <select name="payment_status" id="payment_status" class="mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+              <option value="pending" {% if order.payment_status == 'pending' %}selected{% endif %}>Pending</option>
+              <option value="paid" {% if order.payment_status == 'paid' %}selected{% endif %}>Paid</option>
+              <option value="failed" {% if order.payment_status == 'failed' %}selected{% endif %}>Failed</option>
+              <option value="refund_pending" {% if order.payment_status == 'refund_pending' %}selected{% endif %}>Refund Pending</option>
+              <option value="refunded" {% if order.payment_status == 'refunded' %}selected{% endif %}>Refunded</option>
+            </select>
+          </div>
+          <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-bold rounded-md text-white bg-slate-800 hover:bg-slate-900 transition">
+            Update Payment
+          </button>
+        </form>
+      </div>
+
+      <!-- Items List -->
+      <div class="bg-white shadow rounded-lg border border-slate-200 overflow-hidden">
+        <h3 class="text-lg font-bold text-slate-900 p-6 border-b border-slate-100">Order Items</h3>
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-slate-200 text-left text-sm">
+            <thead class="bg-slate-50 text-slate-500 font-semibold text-xs">
+              <tr>
+                <th class="p-4">Item details</th>
+                <th class="p-4 text-right">Price</th>
+                <th class="p-4 text-center">Qty</th>
+                <th class="p-4 text-right">Total</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+              {% for item in order.items.all %}
+                <tr class="hover:bg-slate-50 transition">
+                  <td class="p-4 flex items-center gap-3">
+                    <div class="w-8 h-8 rounded border border-slate-200 flex items-center justify-center bg-slate-50 text-slate-600 font-black flex-shrink-0 text-xs">
+                      {{ item.product.brand.name|slice:":1" }}
+                    </div>
+                    <div>
+                      <h4 class="font-bold text-slate-900 line-clamp-1">{{ item.product.name }}</h4>
+                      <span class="text-[10px] text-slate-400 font-semibold uppercase">SKU: {{ item.product.sku }} | Plan: {{ item.plan|title }}</span>
+                    </div>
+                  </td>
+                  <td class="p-4 text-right font-semibold text-slate-700">INR {{ item.price|floatformat:"2" }}</td>
+                  <td class="p-4 text-center font-bold text-slate-700">{{ item.quantity }}</td>
+                  <td class="p-4 text-right font-extrabold text-slate-900">INR {{ item.item_total|floatformat:"2" }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Right column: addresses & financial summary -->
+    <div class="space-y-6">
+      
+      <!-- Buyer Information -->
+      <div class="bg-white shadow rounded-lg border border-slate-200 p-6 space-y-4">
+        <h3 class="text-md font-bold text-slate-900 border-b border-slate-100 pb-2">Client Profile</h3>
+        <div class="text-xs text-slate-600 space-y-2">
+          <div><strong>Buyer Name:</strong> {{ order.billing_address.full_name }}</div>
+          <div><strong>Corporate Email:</strong> {{ order.user.email }}</div>
+          <div><strong>Company Phone:</strong> {{ order.billing_address.phone }}</div>
+          {% if order.customer_notes %}
+            <div class="bg-slate-50 p-2.5 rounded border border-slate-200 mt-2 font-semibold">
+              <strong class="text-slate-800">Customer Requirements:</strong>
+              <p class="mt-1 font-normal italic">{{ order.customer_notes }}</p>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Financial totals -->
+      <div class="bg-white shadow rounded-lg border border-slate-200 p-6 space-y-3 text-xs text-slate-600">
+        <h3 class="text-md font-bold text-slate-900 border-b border-slate-100 pb-2 uppercase tracking-wider">Financials</h3>
+        <div class="flex justify-between">
+          <span>Subtotal:</span>
+          <span class="font-bold text-slate-800">INR {{ order.subtotal|floatformat:"2" }}</span>
+        </div>
+        {% if order.discount > 0 %}
+          <div class="flex justify-between">
+            <span class="text-red-600">Coupon Discount:</span>
+            <span class="font-bold text-red-600">- INR {{ order.discount|floatformat:"2" }}</span>
+          </div>
+        {% endif %}
+        <div class="flex justify-between">
+          <span>GST Tax (18%):</span>
+          <span class="font-bold text-slate-800">INR {{ order.tax|floatformat:"2" }}</span>
+        </div>
+        <div class="flex justify-between">
+          <span>B2B Transit charge:</span>
+          <span class="font-bold text-slate-800">INR {{ order.shipping_cost|floatformat:"2" }}</span>
+        </div>
+        <hr class="border-slate-100">
+        <div class="flex justify-between font-black text-sm text-slate-900">
+          <span>Grand Total:</span>
+          <span>INR {{ order.total|floatformat:"2" }}</span>
+        </div>
+      </div>
+
+      <!-- Address Snapshot details -->
+      <div class="bg-white shadow rounded-lg border border-slate-200 p-6 space-y-4 text-xs text-slate-600">
+        <div>
+          <h3 class="text-md font-bold text-slate-900 border-b border-slate-100 pb-2 uppercase tracking-wider">Shipping Address Snapshot</h3>
+          <p class="mt-2 font-semibold text-slate-800">{{ order.shipping_address.full_name }}</p>
+          <p>{{ order.shipping_address.address_line1 }}</p>
+          {% if order.shipping_address.address_line2 %}<p>{{ order.shipping_address.address_line2 }}</p>{% endif %}
+          <p>{{ order.shipping_address.city }}, {{ order.shipping_address.state }} - {{ order.shipping_address.postal_code }}</p>
+          <p>Phone: {{ order.shipping_address.phone }}</p>
+        </div>
+        
+        <hr class="border-slate-100">
+        
+        <div>
+          <h3 class="text-md font-bold text-slate-900 border-b border-slate-100 pb-2 uppercase tracking-wider">Billing Address Snapshot</h3>
+          <p class="mt-2 font-semibold text-slate-800">{{ order.billing_address.full_name }}</p>
+          <p>{{ order.billing_address.address_line1 }}</p>
+          {% if order.billing_address.address_line2 %}<p>{{ order.billing_address.address_line2 }}</p>{% endif %}
+          <p>{{ order.billing_address.city }}, {{ order.billing_address.state }} - {{ order.billing_address.postal_code }}</p>
+          <p>Phone: {{ order.billing_address.phone }}</p>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+{% endblock %}

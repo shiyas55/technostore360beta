@@ -1,0 +1,73 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}T360 Commerce - TechnoStore360{% endblock %}</title>
+  <meta name="description" content="{% block meta_description %}Premium B2B Technology Marketplace. Compare software, hardware, cloud, security, and AI tools, request demos, and get quotes.{% endblock %}">
+  
+  <!-- CSS Stylesheet -->
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+  
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+  <div class="site-shell">
+    
+    <!-- Header component -->
+    {% include 'includes/header.html' %}
+
+    <!-- Dynamic alert alerts -->
+    {% if messages %}
+      <div id="toast-container" class="toast-container" style="position: fixed; bottom: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px;">
+        {% for message in messages %}
+          <div class="toast-notification toast-{{ message.tags }} flex items-center space-x-3 px-4 py-3 rounded-xl border shadow-md font-nav-link text-xs font-semibold" style="display: flex; align-items: center; gap: 10px; background: {% if message.tags == 'success' %}#d1e7dd{% elif message.tags == 'error' %}#f8d7da{% else %}#fff3cd{% endif %}; color: {% if message.tags == 'success' %}#0f5132{% elif message.tags == 'error' %}#842029{% else %}#664d03{% endif %}; border: 1px solid {% if message.tags == 'success' %}#badbcc{% elif message.tags == 'error' %}#f5c2c7{% else %}#ffecb5{% endif %};">
+            <span>{{ message }}</span>
+          </div>
+        {% endfor %}
+      </div>
+      <script>
+        setTimeout(() => {
+          const container = document.getElementById('toast-container');
+          if (container) {
+            container.style.opacity = '0';
+            container.style.transition = 'opacity 0.5s ease';
+            setTimeout(() => container.remove(), 500);
+          }
+        }, 4000);
+      </script>
+    {% endif %}
+
+    <!-- MAIN DYNAMIC CONTENT CONTAINER -->
+    <main class="site-main" id="app-container">
+      {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer component -->
+    {% include 'includes/footer.html' %}
+
+  </div>
+
+  <!-- Back to Top Button -->
+  <button id="back-to-top-btn" aria-label="Back to top">
+    <i data-lucide="arrow-up" style="width: 1.25rem; height: 1.25rem;"></i>
+  </button>
+
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <!-- Custom Static App JS interactions -->
+  <script src="{% static 'js/app.js' %}"></script>
+
+  {% block extra_js %}{% endblock %}
+
+  <script>
+    // Initialize icons
+    if (window.lucide) {
+      window.lucide.createIcons();
+    }
+  </script>
+</body>
+</html>

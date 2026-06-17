@@ -1,0 +1,107 @@
+<!-- GLOBAL TECHNO FOOTER -->
+<footer class="techno-footer">
+  <div class="techno-footer__inner techno-footer__top">
+    
+    <div class="techno-footer__brand">
+      <div class="storemark storemark--footer">
+        <span class="storemark__title" style="color: white;">TECHNO<br/>STORE<span style="color: var(--accent);">360</span></span>
+        <span class="storemark__tag" style="color: rgba(255,255,255,0.65);">Empowering Diversity in Tech</span>
+      </div>
+      <p style="margin-top: 1rem; color: rgba(255,255,255,0.75);">sales@technostore360.com</p>
+      <p style="color: rgba(255,255,255,0.75);">Kinfra Tech Park, Kakkanchery, Kerala, India</p>
+      <p style="margin-top: 0.5rem; font-size: 0.75rem; color: rgba(255,255,255,0.45);">Instagram | Twitter | Facebook | LinkedIn</p>
+    </div>
+
+    <div class="techno-footer__column">
+      <h4 onclick="toggleFooterSection(this)">Categories <i data-lucide="chevron-down" class="footer-chevron"></i></h4>
+      <div class="footer-content">
+        <p><a href="{% url 'product_list' %}?category=software-solutions" style="color: inherit; text-decoration: none;">Software Brands</a></p>
+        <p><a href="{% url 'product_list' %}?category=hardware-products" style="color: inherit; text-decoration: none;">Hardware Products</a></p>
+        <p><a href="{% url 'product_list' %}?category=cloud-security" style="color: inherit; text-decoration: none;">Cloud & Security</a></p>
+        <p><a href="{% url 'product_list' %}?category=ai-tools" style="color: inherit; text-decoration: none;">AI Automation</a></p>
+        <p><a href="{% url 'product_list' %}?category=it-services" style="color: inherit; text-decoration: none;">On-demand IT Services</a></p>
+      </div>
+    </div>
+
+    <div class="techno-footer__column">
+      <h4 onclick="toggleFooterSection(this)">Business <i data-lucide="chevron-down" class="footer-chevron"></i></h4>
+      <div class="footer-content">
+        <p><a href="{% url 'reseller_dashboard' %}" style="color: inherit; text-decoration: none;">Become a Partner</a></p>
+        <p><a href="{% url 'reseller_dashboard' %}" style="color: inherit; text-decoration: none;">Affiliate Program</a></p>
+        <p><a href="{% url 'admin_login' %}" style="color: inherit; text-decoration: none;">Admin Workspace</a></p>
+        <p><a href="{% url 'demo_request' %}" style="color: inherit; text-decoration: none;">Schedule B2B Demo</a></p>
+      </div>
+    </div>
+
+    <div class="techno-footer__column">
+      <h4 onclick="toggleFooterSection(this)">About <i data-lucide="chevron-down" class="footer-chevron"></i></h4>
+      <div class="footer-content">
+        <p><a href="{% url 'home' %}" style="color: inherit; text-decoration: none;">About TechnoStore360</a></p>
+        <p><a href="{% url 'home' %}" style="color: inherit; text-decoration: none;">Blog & Case Studies</a></p>
+        <p><a href="{% url 'demo_request' %}" style="color: inherit; text-decoration: none;">Contact Support</a></p>
+        <p><a href="{% url 'home' %}" style="color: inherit; text-decoration: none;">Return and Refund Policy</a></p>
+        <p><a href="{% url 'home' %}" style="color: inherit; text-decoration: none;">Privacy Policy</a></p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- OFFICES SECTION -->
+  <div class="techno-footer__offices">
+    <div class="techno-footer__inner techno-footer__inner--offices">
+      
+      <div class="office-card">
+        <span class="office-card__index">1</span>
+        <div>
+          <h5>India Office</h5>
+          <p>+91 96337 06212</p>
+          <p>sales@technostore360.com</p>
+          <p>Kinfra Tech Park, Kakkanchery, Kerala</p>
+        </div>
+      </div>
+
+      <div class="office-card">
+        <span class="office-card__index">2</span>
+        <div>
+          <h5>UAE Office</h5>
+          <p>+971 4 2766 345</p>
+          <p>sales@technostore360.com</p>
+          <p>Latifa Tower, 17th Floor, Sheikh Zayed Road, Dubai</p>
+        </div>
+      </div>
+
+      <div class="office-card">
+        <span class="office-card__index">3</span>
+        <div>
+          <h5>Oman Office</h5>
+          <p>+968 7904 0022</p>
+          <p>sales@technostore360.com</p>
+          <p>2nd Floor, Tamimah Building, Al Wattayah, Muscat</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- TRUST & COPYRIGHT BASE -->
+  <div class="techno-footer__base">
+    <div class="techno-footer__inner techno-footer__inner--base">
+      <div class="trust-row">
+        <span>BBB Accredited</span>
+        <span>Norton Secured</span>
+        <span>Verified Business</span>
+        <span>Trusted Commerce</span>
+      </div>
+      <p style="margin-top: 1rem; color: rgba(255,255,255,0.45); font-size: 0.75rem;">&copy; 2026 TechnoStore360. Empowering Diversity in Tech. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+  function toggleFooterSection(element) {
+    if (window.innerWidth <= 768) {
+      const column = element.closest('.techno-footer__column');
+      column.classList.toggle('active');
+    }
+  }
+</script>

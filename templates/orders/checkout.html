@@ -1,0 +1,331 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Checkout - TechnoStore360{% endblock %}
+
+{% block content %}
+<div style="padding-top: 0.5rem; padding-bottom: 4rem;">
+  
+  <div style="margin-bottom: 2rem;">
+    <span style="font-size: 0.75rem; color: var(--slate-500);"><a href="{% url 'cart_detail' %}" style="color: inherit; text-decoration: none;">Cart</a> &gt; Checkout</span>
+    <h1 style="font-size: 1.75rem; margin-top: 0.25rem; font-weight: 800; color: var(--slate-900);">Procurement Checkout</h1>
+  </div>
+
+  <div class="checkout-layout">
+    
+    <!-- Left Column: Checkout Form -->
+    <div>
+      <form method="POST" action="{% url 'checkout' %}" id="checkout-main-form">
+        {% csrf_token %}
+        
+        <!-- Address Selection -->
+        <div class="card" style="padding: 1.5rem; border-radius: var(--radius-lg); margin-bottom: 1.5rem;">
+          <h3 style="font-size: 1.1rem; font-weight: 800; margin-bottom: 1.25rem; color: var(--slate-900);">1. Corporate Addresses</h3>
+          
+          <!-- Shipping Address -->
+          <div style="margin-bottom: 1.5rem;">
+            <label style="font-size: 0.8rem; font-weight: 700; color: var(--slate-700); display: block; margin-bottom: 0.5rem;">Shipping Address *</label>
+            <div style="display: grid; grid-template-columns: 1fr; gap: 0.75rem;">
+              {% for addr in shipping_addresses %}
+                <label style="border: 1px solid var(--slate-200); padding: 0.75rem; border-radius: var(--radius-md); display: flex; gap: 0.75rem; cursor: pointer; align-items: start; background-color: var(--white);">
+                  <input type="radio" name="shipping_address" value="{{ addr.id }}" {% if addr.is_default or forloop.first %}checked{% endif %} style="margin-top: 0.2rem;">
+                  <span style="font-size: 0.75rem; color: var(--slate-600); line-height: 1.3;">
+                    <strong style="color: var(--slate-900); font-size: 0.8rem;">{{ addr.full_name }}</strong> ({{ addr.phone }})<br>
+                    {{ addr.address_line1 }}, {{ addr.address_line2|default:"" }}<br>
+                    {{ addr.city }}, {{ addr.state }} - {{ addr.postal_code }}
+                  </span>
+                </label>
+              {% empty %}
+                <p style="font-size: 0.8rem; color: var(--error-red);">No shipping addresses saved. Please add one below.</p>
+              {% endfor %}
+            </div>
+          </div>
+
+          <!-- Billing Address -->
+          <div style="margin-bottom: 1.5rem;">
+            <label style="font-size: 0.8rem; font-weight: 700; color: var(--slate-700); display: block; margin-bottom: 0.5rem;">Billing Address *</label>
+            <div style="display: grid; grid-template-columns: 1fr; gap: 0.75rem;">
+              {% for addr in billing_addresses %}
+                <label style="border: 1px solid var(--slate-200); padding: 0.75rem; border-radius: var(--radius-md); display: flex; gap: 0.75rem; cursor: pointer; align-items: start; background-color: var(--white);">
+                  <input type="radio" name="billing_address" value="{{ addr.id }}" {% if addr.is_default or forloop.first %}checked{% endif %} style="margin-top: 0.2rem;">
+                  <span style="font-size: 0.75rem; color: var(--slate-600); line-height: 1.3;">
+                    <strong style="color: var(--slate-900); font-size: 0.8rem;">{{ addr.full_name }}</strong> ({{ addr.phone }})<br>
+                    {{ addr.address_line1 }}, {{ addr.address_line2|default:"" }}<br>
+                    {{ addr.city }}, {{ addr.state }} - {{ addr.postal_code }}
+                  </span>
+                </label>
+              {% empty %}
+                <p style="font-size: 0.8rem; color: var(--error-red);">No billing addresses saved. Please add one below.</p>
+              {% endfor %}
+            </div>
+          </div>
+
+          <!-- Collapsible Inline Add Address -->
+          <details style="border: 1px solid var(--slate-200); border-radius: var(--radius-md); overflow: hidden;">
+            <summary style="padding: 0.6rem; font-size: 0.8rem; font-weight: 700; background-color: var(--slate-50); cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center;">
+              <span>Add New Address during Checkout</span>
+              <i data-lucide="plus" style="width: 0.85rem; height: 0.85rem;"></i>
+            </summary>
+            <!-- Form points to address_add and redirects back to checkout -->
+            <div style="padding: 1rem; border-top: 1px solid var(--slate-200); background-color: var(--white);">
+              <div class="form-group" style="margin-bottom: 0.75rem;">
+                <label style="font-size: 0.7rem; font-weight: 600; color: var(--slate-500); display: block; margin-bottom: 0.15rem;">Contact Name *</label>
+                <input type="text" id="new_full_name" class="form-input" style="width:100%; padding:0.45rem; font-size:0.75rem; border: 1px solid var(--slate-200); border-radius:4px;">
+              </div>
+              <div class="form-group" style="margin-bottom: 0.75rem;">
+                <label style="font-size: 0.7rem; font-weight: 600; color: var(--slate-500); display: block; margin-bottom: 0.15rem;">Phone Number *</label>
+                <input type="text" id="new_phone" class="form-input" style="width:100%; padding:0.45rem; font-size:0.75rem; border: 1px solid var(--slate-200); border-radius:4px;">
+              </div>
+              <div class="form-group" style="margin-bottom: 0.75rem;">
+                <label style="font-size: 0.7rem; font-weight: 600; color: var(--slate-500); display: block; margin-bottom: 0.15rem;">Address Line 1 *</label>
+                <input type="text" id="new_address_line1" class="form-input" style="width:100%; padding:0.45rem; font-size:0.75rem; border: 1px solid var(--slate-200); border-radius:4px;">
+              </div>
+              <div class="form-group" style="margin-bottom: 0.75rem;">
+                <label style="font-size: 0.7rem; font-weight: 600; color: var(--slate-500); display: block; margin-bottom: 0.15rem;">Address Line 2</label>
+                <input type="text" id="new_address_line2" class="form-input" style="width:100%; padding:0.45rem; font-size:0.75rem; border: 1px solid var(--slate-200); border-radius:4px;">
+              </div>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 0.75rem;">
+                <div class="form-group">
+                  <label style="font-size: 0.7rem; font-weight: 600; color: var(--slate-500); display: block; margin-bottom: 0.15rem;">City *</label>
+                  <input type="text" id="new_city" class="form-input" style="width:100%; padding:0.45rem; font-size:0.75rem; border: 1px solid var(--slate-200); border-radius:4px;">
+                </div>
+                <div class="form-group">
+                  <label style="font-size: 0.7rem; font-weight: 600; color: var(--slate-500); display: block; margin-bottom: 0.15rem;">State *</label>
+                  <input type="text" id="new_state" class="form-input" style="width:100%; padding:0.45rem; font-size:0.75rem; border: 1px solid var(--slate-200); border-radius:4px;">
+                </div>
+              </div>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 1rem;">
+                <div class="form-group">
+                  <label style="font-size: 0.7rem; font-weight: 600; color: var(--slate-500); display: block; margin-bottom: 0.15rem;">Postal Code *</label>
+                  <input type="text" id="new_postal_code" class="form-input" style="width:100%; padding:0.45rem; font-size:0.75rem; border: 1px solid var(--slate-200); border-radius:4px;">
+                </div>
+                <div class="form-group">
+                  <label style="font-size: 0.7rem; font-weight: 600; color: var(--slate-500); display: block; margin-bottom: 0.15rem;">Address Type</label>
+                  <select id="new_address_type" style="width: 100%; padding: 0.45rem; font-size: 0.75rem; border: 1px solid var(--slate-200); border-radius: 4px;">
+                    <option value="shipping">Shipping Address</option>
+                    <option value="billing">Billing Address</option>
+                  </select>
+                </div>
+              </div>
+              <button type="button" onclick="submitInlineAddress()" class="btn btn-secondary btn-sm" style="font-size: 0.75rem; padding: 0.4rem 0.8rem;">Save Address</button>
+            </div>
+          </details>
+
+        </div>
+
+        <!-- Payment Method -->
+        <div class="card" style="padding: 1.5rem; border-radius: var(--radius-lg); margin-bottom: 1.5rem;">
+          <h3 style="font-size: 1.1rem; font-weight: 800; margin-bottom: 1.25rem; color: var(--slate-900);">2. Payment Pathway</h3>
+          
+          <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+            <label style="border: 1px solid var(--slate-200); padding: 1rem; border-radius: var(--radius-md); display: flex; gap: 0.75rem; cursor: pointer; align-items: start; background-color: var(--white);">
+              <input type="radio" name="payment_method" value="cod" checked style="margin-top: 0.25rem;">
+              <div>
+                <strong style="font-size: 0.85rem; color: var(--slate-900); display: block;">Cash on Delivery / Pay on Invoice</strong>
+                <span style="font-size: 0.75rem; color: var(--slate-500); display: block; margin-top: 0.15rem;">Standard Net 30/60 corporate invoicing terms apply.</span>
+              </div>
+            </label>
+            <label style="border: 1px solid var(--slate-200); padding: 1rem; border-radius: var(--radius-md); display: flex; gap: 0.75rem; cursor: pointer; align-items: start; background-color: var(--white);">
+              <input type="radio" name="payment_method" value="bank_transfer" style="margin-top: 0.25rem;">
+              <div>
+                <strong style="font-size: 0.85rem; color: var(--slate-900); display: block;">Bank Wire Transfer</strong>
+                <span style="font-size: 0.75rem; color: var(--slate-500); display: block; margin-top: 0.15rem;">Direct NEFT/RTGS wire route. Bank clearance details sent upon order generation.</span>
+              </div>
+            </label>
+            <label style="border: 1px solid var(--slate-200); padding: 1rem; border-radius: var(--radius-md); display: flex; gap: 0.75rem; cursor: pointer; align-items: start; background-color: var(--white);">
+              <input type="radio" name="payment_method" value="online" style="margin-top: 0.25rem;">
+              <div>
+                <strong style="font-size: 0.85rem; color: var(--slate-900); display: block;">B2B Corporate Credit Card / NetBanking</strong>
+                <span style="font-size: 0.75rem; color: var(--slate-500); display: block; margin-top: 0.15rem;">Online Sandbox Simulator (clears instantly for testing).</span>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <!-- Additional Notes -->
+        <div class="card" style="padding: 1.5rem; border-radius: var(--radius-lg);">
+          <h3 style="font-size: 1.1rem; font-weight: 800; margin-bottom: 1.25rem; color: var(--slate-900);">3. Technical Setup Notes</h3>
+          <div class="form-group">
+            <textarea name="customer_notes" rows="3" placeholder="Add custom domain names, secondary contacts, or billing department parameters here..." style="width: 100%; padding: 0.6rem; border: 1px solid var(--slate-200); border-radius: var(--radius-md); font-size: 0.8rem; resize: vertical;"></textarea>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <!-- Right Column: Order Summary Sidebar -->
+    <aside style="display: flex; flex-direction: column; gap: 1.5rem;">
+      
+      <!-- Checkout Totals summary -->
+      <div class="card" style="padding: 1.5rem; border-radius: var(--radius-lg); border: 1px solid var(--slate-200);">
+        <h3 style="font-size: 1rem; font-weight: 800; margin-bottom: 1.25rem; color: var(--slate-900); text-transform: uppercase;">Procure Summary</h3>
+        
+        <!-- Items in summary -->
+        <div style="display: flex; flex-direction: column; gap: 0.75rem; max-height: 180px; overflow-y: auto; margin-bottom: 1.25rem; border-bottom: 1px solid var(--slate-100); padding-bottom: 1rem;">
+          {% for item in cart %}
+            <div style="display: flex; justify-content: space-between; font-size: 0.75rem; gap: 1rem;">
+              <div style="color: var(--slate-600); padding-right: 1.5rem;">{{ item.product.name }} ({{ item.plan|title }}) <strong style="color: var(--slate-900);">x {{ item.quantity }}</strong></div>
+              <span style="font-weight: 600; color: var(--slate-800); flex-shrink: 0;">INR {{ item.total_price|floatformat:"2" }}</span>
+            </div>
+          {% endfor %}
+        </div>
+
+        <!-- Coupon Application Section -->
+        <div style="margin-bottom: 1.25rem;">
+          <div style="display: flex; gap: 0.35rem; align-items: center;">
+            <input type="text" id="coupon-code-input" placeholder="COUPON15" value="{{ coupon.code|default:'' }}" style="flex: 1; padding: 0.45rem; border: 1px solid var(--slate-200); border-radius: 4px; font-size: 0.75rem; text-transform: uppercase; font-weight: 700; text-align: center;">
+            <button type="button" onclick="applyCouponCode()" class="btn btn-outline btn-sm" style="padding: 0.45rem 0.75rem; font-size: 0.75rem; font-weight: bold;">Apply</button>
+          </div>
+          <div id="coupon-message" style="font-size: 0.7rem; font-weight: 600; margin-top: 0.25rem;">
+            {% if coupon %}
+              <span style="color: var(--primary-green);">Coupon "{{ coupon.code }}" applied!</span>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- Pricing breakdown -->
+        <div style="display: flex; flex-direction: column; gap: 0.65rem; font-size: 0.78rem; margin-bottom: 1.25rem;">
+          <div style="display: flex; justify-content: space-between; color: var(--slate-600);">
+            <span>Subtotal:</span>
+            <span style="font-weight: 600; color: var(--slate-800);">INR {{ subtotal|floatformat:"2" }}</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; color: var(--slate-600); display: {% if discount > 0 %}flex{% else %}none{% endif %};" id="summary-discount-row">
+            <span>Coupon Discount:</span>
+            <span style="font-weight: 600; color: var(--error-red);" id="summary-discount-val">- INR {{ discount|floatformat:"2" }}</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; color: var(--slate-600);">
+            <span>GST (18% B2B tax):</span>
+            <span style="font-weight: 600; color: var(--slate-800);">INR {{ tax|floatformat:"2" }}</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; color: var(--slate-600);">
+            <span>B2B Transit charge:</span>
+            <span style="font-weight: 600; color: var(--slate-800);">
+              {% if shipping > 0 %}
+                INR {{ shipping|floatformat:"2" }}
+              {% else %}
+                <span style="color: var(--primary-green); font-weight: bold;">FREE</span>
+              {% endif %}
+            </span>
+          </div>
+        </div>
+
+        <hr style="border: none; border-top: 1px solid var(--slate-100); margin: 0 0 1.25rem 0;">
+
+        <div style="display: flex; justify-content: space-between; font-size: 1rem; font-weight: 800; color: var(--slate-900); margin-bottom: 1.5rem;">
+          <span>Grand Total:</span>
+          <span id="summary-grand-total">INR {{ total|floatformat:"2" }}</span>
+        </div>
+
+        <button type="button" onclick="submitCheckoutForm()" class="btn btn-primary btn-sm" style="width: 100%; padding: 0.75rem; font-size: 0.85rem; font-weight: 700; text-align: center;">
+          Place B2B Order <i data-lucide="check-square" style="width: 0.95rem; display: inline-block; vertical-align: text-top; margin-left: 2px;"></i>
+        </button>
+      </div>
+
+    </aside>
+
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  function applyCouponCode() {
+    const code = document.getElementById('coupon-code-input').value.trim();
+    if (!code) {
+      alert("Please enter a coupon code.");
+      return;
+    }
+    
+    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    const formData = new FormData();
+    formData.append('coupon_code', code);
+    
+    fetch("{% url 'coupon_apply' %}", {
+      method: 'POST',
+      headers: {
+        'X-CSRFToken': csrftoken
+      },
+      body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+      const msgDiv = document.getElementById('coupon-message');
+      if (data.success) {
+        msgDiv.innerHTML = `<span style="color: var(--primary-green);">${data.message}</span>`;
+        
+        // Show discount row
+        document.getElementById('summary-discount-row').style.display = 'flex';
+        document.getElementById('summary-discount-val').innerText = `- INR ` + data.discount.toFixed(2);
+        
+        // Update Grand Total
+        document.getElementById('summary-grand-total').innerText = `INR ` + data.grand_total.toFixed(2);
+      } else {
+        msgDiv.innerHTML = `<span style="color: var(--error-red);">${data.message}</span>`;
+      }
+    });
+  }
+
+  function submitCheckoutForm() {
+    // Check if addresses are selected
+    const shippingSelected = document.querySelector('input[name="shipping_address"]:checked');
+    const billingSelected = document.querySelector('input[name="billing_address"]:checked');
+    
+    if (!shippingSelected || !billingSelected) {
+      alert("Please select both shipping and billing addresses before placing order. If none exist, add one under the 'Add New Address' tab.");
+      return;
+    }
+    
+    document.getElementById('checkout-main-form').submit();
+  }
+
+  function submitInlineAddress() {
+    const fullName = document.getElementById('new_full_name').value.trim();
+    const phone = document.getElementById('new_phone').value.trim();
+    const address1 = document.getElementById('new_address_line1').value.trim();
+    const address2 = document.getElementById('new_address_line2').value.trim();
+    const city = document.getElementById('new_city').value.trim();
+    const state = document.getElementById('new_state').value.trim();
+    const postalCode = document.getElementById('new_postal_code').value.trim();
+    const type = document.getElementById('new_address_type').value;
+    
+    if (!fullName || !phone || !address1 || !city || !state || !postalCode) {
+      alert("Please fill in all required address fields.");
+      return;
+    }
+    
+    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    const formData = new FormData();
+    formData.append('full_name', fullName);
+    formData.append('phone', phone);
+    formData.append('address_line1', address1);
+    formData.append('address_line2', address2);
+    formData.append('city', city);
+    formData.append('state', state);
+    formData.append('postal_code', postalCode);
+    formData.append('address_type', type);
+    formData.append('next', "{% url 'checkout' %}");
+    
+    const tempForm = document.createElement('form');
+    tempForm.method = 'POST';
+    tempForm.action = "{% url 'address_add' %}";
+    
+    // Add CSRF token
+    const csrfInput = document.createElement('input');
+    csrfInput.type = 'hidden';
+    csrfInput.name = 'csrfmiddlewaretoken';
+    csrfInput.value = csrftoken;
+    tempForm.appendChild(csrfInput);
+    
+    // Add fields
+    for (const [key, value] of formData.entries()) {
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = key;
+      input.value = value;
+      tempForm.appendChild(input);
+    }
+    
+    document.body.appendChild(tempForm);
+    tempForm.submit();
+  }
+</script>
+{% endblock %}

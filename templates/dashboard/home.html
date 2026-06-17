@@ -1,0 +1,140 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title %}Dashboard Landing - TechnoStore360 Admin{% endblock %}
+
+{% block admin_content %}
+<div class="space-y-8">
+  <div>
+    <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">Console Overview</h1>
+    <p class="text-sm text-slate-500 mt-1">Real-time procurement transactions and operational status.</p>
+  </div>
+
+  <!-- Stat Grid -->
+  <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+    <!-- Stat Card 1 -->
+    <div class="bg-white overflow-hidden shadow rounded-lg border border-slate-200 p-5 flex items-center justify-between">
+      <div>
+        <dt class="text-xs font-semibold text-slate-400 uppercase tracking-wider">TOTAL REVENUE (PAID)</dt>
+        <dd class="mt-1 text-2xl font-black text-slate-900">INR {{ total_sales|floatformat:"2" }}</dd>
+      </div>
+      <div class="bg-green-100 p-3 rounded-full text-green-600">
+        <span class="material-symbols-outlined">payments</span>
+      </div>
+    </div>
+
+    <!-- Stat Card 2 -->
+    <div class="bg-white overflow-hidden shadow rounded-lg border border-slate-200 p-5 flex items-center justify-between">
+      <div>
+        <dt class="text-xs font-semibold text-slate-400 uppercase tracking-wider">PENDING ORDERS</dt>
+        <dd class="mt-1 text-2xl font-black text-slate-900">{{ pending_orders_count }}</dd>
+      </div>
+      <div class="bg-amber-100 p-3 rounded-full text-amber-600">
+        <span class="material-symbols-outlined">pending_actions</span>
+      </div>
+    </div>
+
+    <!-- Stat Card 3 -->
+    <div class="bg-white overflow-hidden shadow rounded-lg border border-slate-200 p-5 flex items-center justify-between">
+      <div>
+        <dt class="text-xs font-semibold text-slate-400 uppercase tracking-wider">ACTIVE CUSTOMERS</dt>
+        <dd class="mt-1 text-2xl font-black text-slate-900">{{ customers_count }}</dd>
+      </div>
+      <div class="bg-blue-100 p-3 rounded-full text-blue-600">
+        <span class="material-symbols-outlined">groups</span>
+      </div>
+    </div>
+
+    <!-- Stat Card 4 -->
+    <div class="bg-white overflow-hidden shadow rounded-lg border border-slate-200 p-5 flex items-center justify-between">
+      <div>
+        <dt class="text-xs font-semibold text-slate-400 uppercase tracking-wider">PENDING REVIEWS</dt>
+        <dd class="mt-1 text-2xl font-black text-slate-900">{{ pending_reviews_count }}</dd>
+      </div>
+      <div class="bg-rose-100 p-3 rounded-full text-rose-600">
+        <span class="material-symbols-outlined">rate_review</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
+    <!-- Left: Recent Orders -->
+    <div class="bg-white shadow rounded-lg border border-slate-200 p-6 lg:col-span-2 space-y-4">
+      <div class="flex items-center justify-between">
+        <h3 class="text-lg font-bold text-slate-900">Recent Orders</h3>
+        <a href="{% url 'admin_orders' %}" class="text-xs font-bold text-blue-600 hover:text-blue-700 transition">View All</a>
+      </div>
+      
+      <div class="overflow-x-auto border border-slate-100 rounded-lg">
+        <table class="min-w-full divide-y divide-slate-200 text-left text-sm">
+          <thead class="bg-slate-50 text-slate-500 font-semibold">
+            <tr>
+              <th class="p-3">Order ID</th>
+              <th class="p-3">Date</th>
+              <th class="p-3">Total</th>
+              <th class="p-3">Payment</th>
+              <th class="p-3">Status</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100">
+            {% for order in recent_orders %}
+              <tr class="hover:bg-slate-50 transition">
+                <td class="p-3 font-bold text-blue-600"><a href="{% url 'admin_order_detail' order.order_number %}">{{ order.order_number }}</a></td>
+                <td class="p-3 text-slate-500">{{ order.created_at|date:"Y-m-d" }}</td>
+                <td class="p-3 font-bold text-slate-900">INR {{ order.total|floatformat:"2" }}</td>
+                <td class="p-3">
+                  <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-bold {% if order.payment_status == 'paid' %}bg-green-100 text-green-800{% else %}bg-yellow-100 text-yellow-800{% endif %}">
+                    {{ order.get_payment_status_display }}
+                  </span>
+                </td>
+                <td class="p-3">
+                  <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-bold bg-blue-100 text-blue-800">
+                    {{ order.get_order_status_display }}
+                  </span>
+                </td>
+              </tr>
+            {% empty %}
+              <tr>
+                <td colspan="5" class="p-6 text-center text-slate-400">No orders placed yet.</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Right: Low Stock Alert -->
+    <div class="bg-white shadow rounded-lg border border-slate-200 p-6 space-y-4">
+      <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+        <span class="material-symbols-outlined text-rose-500">warning</span>
+        Low Stock Alerts
+      </h3>
+      
+      <div class="divide-y divide-slate-100 max-h-[340px] overflow-y-auto pr-1">
+        {% for prod in low_stock_products %}
+          <div class="py-3 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <div class="bg-slate-100 text-slate-600 text-xs font-extrabold w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0">
+                {{ prod.brand.name|slice:":1" }}
+              </div>
+              <div>
+                <h4 class="text-xs font-bold text-slate-900 line-clamp-1"><a href="{% url 'admin_product_edit' prod.id %}">{{ prod.name }}</a></h4>
+                <p class="text-[10px] text-slate-400 font-semibold">SKU: {{ prod.sku }}</p>
+              </div>
+            </div>
+            
+            <div class="text-right">
+              <span class="text-xs font-black text-rose-600 block">{{ prod.stock_qty }} left</span>
+              <span class="text-[10px] text-slate-400 uppercase font-semibold">restock required</span>
+            </div>
+          </div>
+        {% empty %}
+          <div class="py-12 text-center text-slate-400">
+            <span class="material-symbols-outlined text-green-500 text-3xl mb-2">check_circle</span>
+            <p class="text-sm font-semibold">All products fully stocked.</p>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

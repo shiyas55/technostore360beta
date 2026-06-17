@@ -1,0 +1,168 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Procurement Cart - TechnoStore360{% endblock %}
+
+{% block content %}
+<div style="padding-top: 0.5rem; padding-bottom: 4rem;">
+  
+  <div style="margin-bottom: 2rem;">
+    <span style="font-size: 0.75rem; color: var(--slate-500);"><a href="{% url 'home' %}" style="color: inherit; text-decoration: none;">Home</a> &gt; Procurement Cart</span>
+    <h1 style="font-size: 1.75rem; margin-top: 0.25rem; font-weight: 800; color: var(--slate-900);">Procurement Cart</h1>
+  </div>
+
+  {% csrf_token %}
+  {% if cart %}
+    <div class="checkout-layout">
+      
+      <!-- Cart Items Table -->
+      <div class="dash-table-wrapper" style="border: 1px solid var(--slate-200); border-radius: var(--radius-lg);">
+        <table style="width: 100%; border-collapse: collapse; text-align: left; min-width: 600px;">
+          <thead style="background-color: var(--slate-50); border-bottom: 1px solid var(--slate-200);">
+            <tr>
+              <th style="padding: 1rem; font-size: 0.75rem; font-weight: 800; color: var(--slate-700); text-transform: uppercase;">Product Details</th>
+              <th style="padding: 1rem; font-size: 0.75rem; font-weight: 800; color: var(--slate-700); text-transform: uppercase;">Unit Price</th>
+              <th style="padding: 1rem; font-size: 0.75rem; font-weight: 800; color: var(--slate-700); text-transform: uppercase;">Licenses / Qty</th>
+              <th style="padding: 1rem; font-size: 0.75rem; font-weight: 800; color: var(--slate-700); text-transform: uppercase; text-align: right;">Total</th>
+              <th style="padding: 1rem; width: 50px;"></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in cart %}
+              <tr style="border-bottom: 1px solid var(--slate-100);">
+                <!-- Product details -->
+                <td style="padding: 1.25rem;">
+                  <div style="display: flex; align-items: center; gap: 0.75rem;">
+                    <div style="width: 3rem; height: 3rem; border-radius: var(--radius-sm); border: 1px solid var(--slate-200); display: flex; align-items: center; justify-content: center; background-color: var(--white); flex-shrink: 0; overflow: hidden; padding: 0.15rem;">
+                      {% if item.product.image_file %}
+                        <img src="{{ item.product.image_file.url }}" style="width: 100%; height: 100%; object-fit: contain;" alt="{{ item.product.name }}">
+                      {% elif item.product.image %}
+                        {% if 'http' in item.product.image %}
+                          <img src="{{ item.product.image }}" style="width: 100%; height: 100%; object-fit: contain;" alt="{{ item.product.name }}">
+                        {% else %}
+                          <img src="{% static item.product.image %}" style="width: 100%; height: 100%; object-fit: contain;" alt="{{ item.product.name }}">
+                        {% endif %}
+                      {% else %}
+                        <img src="{% static 'assets/zoho.png' %}" style="width: 100%; height: 100%; object-fit: contain;" alt="{{ item.product.name }}">
+                      {% endif %}
+                    </div>
+                    <div>
+                      <h4 style="font-size: 0.85rem; font-weight: 800; color: var(--slate-900); margin: 0;"><a href="{% url 'product_detail' item.product.slug %}" style="color: inherit; text-decoration: none;">{{ item.product.name }}</a></h4>
+                      <span style="font-size: 0.7rem; color: var(--slate-400);">By {{ item.product.brand.name }} | {{ item.product.deployment }} | Plan: {{ item.plan|title }}</span>
+                    </div>
+                  </div>
+                </td>
+                
+                <!-- Unit Price -->
+                <td style="padding: 1.25rem; font-size: 0.85rem; color: var(--slate-800); font-weight: 600;">
+                  INR {{ item.price|floatformat:"2" }}
+                </td>
+                
+                <!-- Quantity Picker -->
+                <td style="padding: 1.25rem;">
+                  <input type="number" value="{{ item.quantity }}" min="1" max="{{ item.product.stock_qty }}" onchange="updateCartQuantity('{{ item.product.id }}', this.value, '{{ item.plan }}')" style="width: 65px; padding: 0.35rem; border: 1px solid var(--slate-200); border-radius: 4px; font-weight: 700; font-size: 0.85rem; text-align: center;">
+                </td>
+                
+                <!-- Total -->
+                <td style="padding: 1.25rem; font-size: 0.85rem; font-weight: 800; color: var(--slate-900); text-align: right;">
+                  INR {{ item.total_price|floatformat:"2" }}
+                </td>
+                
+                <!-- Remove -->
+                <td style="padding: 1.25rem; text-align: center;">
+                  <a href="{% url 'cart_remove' item.product.id %}?plan={{ item.plan }}" style="color: var(--slate-400); text-decoration: none;" title="Remove item">
+                    <i data-lucide="trash-2" style="width: 1rem; height: 1rem;"></i>
+                  </a>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        
+        <!-- Cart footer controls -->
+        <div style="padding: 1rem 1.25rem; display: flex; justify-content: space-between; align-items: center; background-color: var(--slate-50);">
+          <a href="{% url 'product_list' %}" class="btn btn-outline btn-sm" style="font-size: 0.75rem; text-decoration: none;"><i data-lucide="arrow-left" style="width: 0.8rem; display: inline-block; vertical-align: text-top; margin-right: 2px;"></i> Back to Catalog</a>
+          <a href="{% url 'cart_clear' %}" class="btn btn-outline btn-sm" style="font-size: 0.75rem; text-decoration: none; color: var(--error-red); border-color: var(--error-red);" onclick="return confirm('Are you sure you want to clear your cart?');">Clear Procurement Cart</a>
+        </div>
+      </div>
+
+      <!-- Financial Summary Sidebar -->
+      <aside class="card" style="padding: 1.5rem; border-radius: var(--radius-lg); border: 1px solid var(--slate-200);">
+        <h3 style="font-size: 1rem; font-weight: 800; margin-bottom: 1.25rem; color: var(--slate-900); text-transform: uppercase;">Procurement Summary</h3>
+        
+        <div style="display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.8rem; margin-bottom: 1.25rem;">
+          <div style="display: flex; justify-content: space-between; color: var(--slate-600);">
+            <span>Subtotal:</span>
+            <span style="font-weight: 600; color: var(--slate-800);">INR {{ cart.get_subtotal|floatformat:"2" }}</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; color: var(--slate-600);">
+            <span>GST (18% B2B tax):</span>
+            <span style="font-weight: 600; color: var(--slate-800);">INR {{ cart.get_tax|floatformat:"2" }}</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; color: var(--slate-600);">
+            <span>B2B Transit charge:</span>
+            <span style="font-weight: 600; color: var(--slate-800);">
+              {% if cart.get_shipping_cost > 0 %}
+                INR {{ cart.get_shipping_cost|floatformat:"2" }}
+              {% else %}
+                <span style="color: var(--primary-green); font-weight: bold;">FREE</span>
+              {% endif %}
+            </span>
+          </div>
+          {% if cart.get_shipping_cost > 0 %}
+            <div style="font-size: 0.65rem; color: var(--slate-400); margin-top: -0.25rem;">(Free shipping for B2B orders above INR 50,000)</div>
+          {% endif %}
+        </div>
+
+        <hr style="border: none; border-top: 1px solid var(--slate-100); margin: 0 0 1.25rem 0;">
+
+        <div style="display: flex; justify-content: space-between; font-size: 1rem; font-weight: 800; color: var(--slate-900); margin-bottom: 1.5rem;">
+          <span>Total:</span>
+          <span>INR {{ cart.get_total|floatformat:"2" }}</span>
+        </div>
+
+        <a href="{% url 'checkout' %}" class="btn btn-primary btn-sm" style="width: 100%; padding: 0.75rem; font-size: 0.85rem; font-weight: 700; text-align: center; text-decoration: none; display: block;">
+          Proceed to Checkout <i data-lucide="arrow-right" style="width: 0.95rem; display: inline-block; vertical-align: text-top; margin-left: 2px;"></i>
+        </a>
+      </aside>
+
+    </div>
+  {% else %}
+    <!-- Empty State -->
+    <div class="card" style="text-align: center; padding: 4rem 2rem; border-radius: var(--radius-lg);">
+      <div style="background-color: var(--slate-50); width: 4rem; height: 4rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.25rem auto; color: var(--slate-400);">
+        <i data-lucide="shopping-cart" style="width: 2rem; height: 2rem;"></i>
+      </div>
+      <h3 style="font-weight: 700; color: var(--slate-800);">Your Procurement Cart is Empty</h3>
+      <p style="color: var(--slate-500); margin-bottom: 1.5rem; font-size: 0.85rem;">Browse our marketplace catalog to onboard software licenses, hardware equipment, and IT services.</p>
+      <a href="{% url 'product_list' %}" class="btn btn-primary btn-sm">Explore Marketplace</a>
+    </div>
+  {% endif %}
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  function updateCartQuantity(productId, quantity, plan) {
+    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    const formData = new FormData();
+    formData.append('quantity', quantity);
+    formData.append('plan', plan);
+    
+    fetch(`/cart/update/${productId}/`, {
+      method: 'POST',
+      headers: {
+        'X-CSRFToken': csrftoken
+      },
+      body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        window.location.reload();
+      }
+    });
+  }
+</script>
+{% endblock %}

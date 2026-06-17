@@ -1,0 +1,67 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title %}Manage Orders - TechnoStore360 Admin{% endblock %}
+
+{% block admin_content %}
+<div class="space-y-6">
+  <div>
+    <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight font-display">Procure Orders Management</h1>
+    <p class="text-sm text-slate-500 mt-1">Audit, process, track, and update B2B transaction states.</p>
+  </div>
+
+  <!-- Orders Table -->
+  <div class="bg-white shadow rounded-lg border border-slate-200 overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-slate-200 text-left text-sm">
+        <thead class="bg-slate-50 text-slate-500 font-semibold text-xs uppercase tracking-wider">
+          <tr>
+            <th class="p-4">Order ID</th>
+            <th class="p-4">Date</th>
+            <th class="p-4">Buyer Client</th>
+            <th class="p-4">Payment Method</th>
+            <th class="p-4">Payment Status</th>
+            <th class="p-4">Total Amount</th>
+            <th class="p-4">Fulfillment Status</th>
+            <th class="p-4 text-right">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100">
+          {% for order in orders %}
+            <tr class="hover:bg-slate-50 transition">
+              <td class="p-4 font-bold text-blue-600">
+                <a href="{% url 'admin_order_detail' order.order_number %}">{{ order.order_number }}</a>
+              </td>
+              <td class="p-4 text-slate-500">{{ order.created_at|date:"Y-m-d H:i" }}</td>
+              <td class="p-4">
+                <div class="font-bold text-slate-900">{{ order.billing_address.full_name }}</div>
+                <div class="text-xs text-slate-400 font-semibold">{{ order.user.email }}</div>
+              </td>
+              <td class="p-4 text-slate-500 font-semibold uppercase">{{ order.get_payment_method_display }}</td>
+              <td class="p-4">
+                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-bold {% if order.payment_status == 'paid' %}bg-green-100 text-green-800{% else %}bg-yellow-100 text-yellow-800{% endif %}">
+                  {{ order.get_payment_status_display }}
+                </span>
+              </td>
+              <td class="p-4 font-bold text-slate-900">INR {{ order.total|floatformat:"2" }}</td>
+              <td class="p-4">
+                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-bold bg-blue-100 text-blue-800 uppercase">
+                  {{ order.get_order_status_display }}
+                </span>
+              </td>
+              <td class="p-4 text-right whitespace-nowrap">
+                <a href="{% url 'admin_order_detail' order.order_number %}" class="inline-flex items-center px-2.5 py-1.5 text-xs font-bold rounded border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 transition">
+                  Manage Desk
+                </a>
+              </td>
+            </tr>
+          {% empty %}
+            <tr>
+              <td colspan="8" class="p-8 text-center text-slate-400">No B2B orders have been placed in the database.</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}
