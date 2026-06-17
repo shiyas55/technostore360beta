@@ -1825,7 +1825,6 @@ function getDetailHTML(productId) {
     </div>
   `;
 }
-}
 
 function setupDetailEvents(productId) {
   const prod = products.find(p => p.id === productId) || products[0];
