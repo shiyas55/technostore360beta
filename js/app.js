@@ -777,7 +777,7 @@ function getHomeHTML(params) {
           <a href="#demo?case=mavar" class="btn btn-outline btn-sm" style="border-color: var(--accent); color: var(--accent);">View Case Study</a>
         </div>
         <div class="case-study-image">
-          <img src="assets/media__1781084687510.png" alt="Case Study Mockup">
+          <img src="assets/mavar_banner.png" alt="Case Study Mockup">
         </div>
       </div>
     </section>
