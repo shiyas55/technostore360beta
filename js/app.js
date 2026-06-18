@@ -623,7 +623,7 @@ function getHomeHTML(params) {
         <a href="#listing?category=ai-tools" class="btn btn-primary btn-sm">Explore AI Solutions</a>
       </div>
       <div class="ai-banner-illustration">
-        <img src="assets/media__1781323496674.png" alt="AI Brain Model">
+        <img src="assets/chatgpt_image_jun_16.png" alt="AI Brain Model">
       </div>
     </section>
 
