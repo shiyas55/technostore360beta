@@ -319,16 +319,16 @@ function toggleCompareState(prodId, btnElement) {
 // ----------------------------------------------------
 
 const homeBrands = [
-  { id: 'ZEGOCLOUD', name: 'ZEGOCLOUD', symbol: 'Z' },
-  { id: 'Trello', name: 'Trello', symbol: 'T' },
-  { id: 'monday.com', name: 'monday.com', symbol: 'M' },
-  { id: 'Zoho', name: 'Zoho', symbol: 'Z' },
-  { id: 'Atlassian', name: 'Atlassian', symbol: 'A' },
-  { id: 'Productboard', name: 'Productboard', symbol: 'P' },
-  { id: 'Asana', name: 'Asana', symbol: 'A' },
-  { id: 'ClickUp', name: 'ClickUp', symbol: 'C' },
-  { id: 'Wrike', name: 'Wrike', symbol: 'W' },
-  { id: 'Figma', name: 'Figma', symbol: 'F' }
+  { id: 'ZEGOCLOUD', name: 'ZEGOCLOUD', logo: 'zegocloud.png' },
+  { id: 'Trello', name: 'Trello', logo: 'trello.png' },
+  { id: 'monday.com', name: 'monday.com', logo: 'monday.png' },
+  { id: 'Zoho', name: 'Zoho', logo: 'zoho.png' },
+  { id: 'Atlassian', name: 'Atlassian', logo: 'atlassian.png' },
+  { id: 'Productboard', name: 'Productboard', logo: 'productboard.png' },
+  { id: 'Asana', name: 'Asana', logo: 'asana.png' },
+  { id: 'ClickUp', name: 'ClickUp', logo: 'clickup.png' },
+  { id: 'Wrike', name: 'Wrike', logo: 'wrike.png' },
+  { id: 'Figma', name: 'Figma', logo: 'figma.png' }
 ];
 
 
@@ -935,10 +935,11 @@ function renderHomeBrandAndProducts() {
   // Render brand chips
   brandStrip.innerHTML = homeBrands.map(brand => {
     const isActive = appState.homeActiveBrand === brand.id;
+    const logoSrc = `assets/${brand.logo}`;
     return `
       <div class="brand-chip ${isActive ? 'active' : ''}" onclick="toggleHomeBrandFilter('${brand.id}')">
-        <div style="width: 2.25rem; height: 2.25rem; display: flex; align-items: center; justify-content: center; font-weight: 800; color: ${isActive ? 'white' : 'var(--accent)'}; background-color: ${isActive ? 'var(--accent)' : 'var(--slate-100)'}; border-radius: 50%; transition: all 0.2s;">
-          ${brand.symbol}
+        <div style="width: 2.25rem; height: 2.25rem; display: flex; align-items: center; justify-content: center; background-color: white; border-radius: 50%; overflow: hidden; padding: 4px; transition: all 0.2s; border: ${isActive ? '2px solid var(--accent)' : '1px solid var(--slate-200)'};">
+          <img src="${logoSrc}" alt="${brand.name} logo" style="width: 100%; height: 100%; object-fit: contain;">
         </div>
         <span>${brand.name}</span>
       </div>
